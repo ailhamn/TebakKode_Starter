@@ -9,3 +9,39 @@
 
 </body>
 </html>
+foreach ($this->events['events'] as $event)
+
+   {
+
+   // skip group and room event
+
+   if(! isset($event['source']['userId'])) continue;
+
+
+
+   // get user data from database
+
+   $this->user = $this->tebakkode_m     ->getUser($event['source']['userId']);
+
+   // respond event
+
+   if($event['type'] == 'message'){
+
+       if(method_exists($this, $event['message']['type'].'Message')){
+
+       $this->{$event['message']['type'].'Message'}($event);
+
+       }
+
+   }
+
+   else {
+
+       if(method_exists($this, $event['type'].'Callback')){
+
+       $this->{$event['type'].'Callback'}($event);
+
+       }
+
+   }
+}
